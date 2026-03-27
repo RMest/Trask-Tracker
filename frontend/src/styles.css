@@ -1,0 +1,110 @@
+:root {
+  font-family: Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #ffffff;
+  color: #111111;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-header {
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+.container {
+  width: min(1100px, 94vw);
+  margin: 2.5rem auto 0;
+}
+
+.subtitle {
+  margin: 0 0 1rem;
+  color: #4b4b4b;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.calendar-card,
+.task-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  padding: 1rem;
+}
+
+.task-card h2 {
+  margin: 0 0 0.75rem;
+}
+
+.selected-date {
+  margin: 0 0 0.75rem;
+  color: #555555;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.task-list li {
+  border: 1px solid #efefef;
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.task-title {
+  font-weight: 600;
+}
+
+.task-date {
+  color: #666666;
+  font-size: 0.92rem;
+}
+
+.fc .fc-button-primary {
+  background: #d32f2f;
+  border-color: #b71c1c;
+}
+
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:hover {
+  background: #b71c1c;
+  border-color: #8b0000;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.15rem;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,13 +2,13 @@ package com.example.demo;
 
 import java.util.Map;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class HomeController {
 
     private final CalculatorService calculatorService;
@@ -17,13 +17,7 @@ public class HomeController {
         this.calculatorService = calculatorService;
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
-
     @PostMapping("/api/calculate")
-    @ResponseBody
     public Map<String, Object> calculate(
             @RequestParam String operation,
             @RequestParam double num1,
