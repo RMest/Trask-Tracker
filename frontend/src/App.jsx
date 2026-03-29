@@ -1,9 +1,26 @@
 import { useMemo, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import Login from "./Login.jsx";
 
-export default function App() {
+const AUTH_KEY = "isLoggedIn";
+
+function getIsLoggedIn() {
+  try {
+    return localStorage.getItem(AUTH_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function ProtectedRoute({ children }) {
+  if (!getIsLoggedIn()) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function TaskBuilderPage() {
   const [selectedDate, setSelectedDate] = useState(null);
 
   const sampleTasks = useMemo(
@@ -21,10 +38,25 @@ export default function App() {
     setSelectedDate(info.dateStr);
   }
 
+  const navigate = useNavigate();
+  function handleLogout() {
+    try {
+      localStorage.removeItem(AUTH_KEY);
+    } catch {
+      // ignore
+    }
+    navigate("/login");
+  }
+
   return (
     <div className="app-shell">
       <header className="app-header">
-        <h1>Task Builder</h1>
+        <div className="app-header-row">
+          <h1>Task Builder</h1>
+          <button type="button" className="logout-button" onClick={handleLogout}>
+            Log out
+          </button>
+        </div>
       </header>
 
       <main className="container">
@@ -64,5 +96,29 @@ export default function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            getIsLoggedIn() ? <Navigate to="/" replace /> : <Login />
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <TaskBuilderPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

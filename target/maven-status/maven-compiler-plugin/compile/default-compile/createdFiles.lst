@@ -1,3 +1,7 @@
-com/example/demo/HomeController.class
 com/example/demo/BlankCanvasApplication.class
+com/example/demo/UserController$CreateUserRequest.class
+com/example/demo/UserController.class
+com/example/demo/UserService.class
+com/example/demo/UserService$User.class
+com/example/demo/HomeController.class
 com/example/demo/CalculatorService.class

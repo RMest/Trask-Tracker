@@ -1,5 +1,21 @@
+@font-face {
+  font-family: "RigidDisplayRegular";
+  src: url("./assets/fonts/RigidDisplayRegular.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RigidDisplayBold";
+  src: url("./assets/fonts/RigidDisplayBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
-  font-family: Arial, sans-serif;
+  font-family: Verdana, sans-serif;
 }
 
 * {
@@ -23,8 +39,32 @@ body {
   border-bottom: 1px solid #e6e6e6;
 }
 
+.app-header-row {
+  width: min(1100px, 94vw);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .app-header h1 {
   margin: 0;
+}
+
+.logout-button {
+  background: #d32f2f;
+  border: 1px solid #b71c1c;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #b71c1c;
+  border-color: #8b0000;
 }
 
 .container {
@@ -107,4 +147,101 @@ body {
   .layout {
     grid-template-columns: 1fr;
   }
+
+  .app-header-row {
+    flex-direction: column;
+  }
+}
+
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+  background: linear-gradient(to bottom, #f8fcff 0%, #99a8ac 100%);
+  font-family: "RigidDisplayRegular", Verdana, sans-serif;
+}
+
+.login-title {
+  width: min(480px, 92vw);
+  margin: 0 0 1rem;
+  font-size: 5.00rem;
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.builder-word {
+  font-family: "RigidDisplayBold", "RigidDisplayRegular", Verdana, sans-serif;
+}
+
+.login-text {
+  color: #168ab7;
+  text-align: center;
+  font-size: 2.00rem;
+}
+
+.login-card {
+  width: min(480px, 92vw);
+  background: #e3e7ea;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.login-card h2 {
+  margin: 0 0 1rem;
+}
+
+.login-form {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.login-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.login-error {
+  color: #b00020;
+  font-size: 0.95rem;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.login-button {
+  width: 80%;
+  background: #168ab7;
+  color: #ffffff;
+  border-radius: 2.00rem;
+  padding: 0.65rem 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  opacity: 0.8;
+}
+
+.login-hint {
+  margin: 1rem 0 0;
+  color: #666666;
+  font-size: 0.9rem;
 }
