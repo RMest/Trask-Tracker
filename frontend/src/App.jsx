@@ -4,6 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Login from "./Login.jsx";
+import Signup from "./Signup.jsx";
 
 const AUTH_KEY = "isLoggedIn";
 
@@ -108,6 +109,10 @@ export default function App() {
           element={
             getIsLoggedIn() ? <Navigate to="/" replace /> : <Login />
           }
+        />
+        <Route
+          path="/signup"
+          element={getIsLoggedIn() ? <Navigate to="/" replace /> : <Signup />}
         />
         <Route
           path="/"

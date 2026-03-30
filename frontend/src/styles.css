@@ -240,6 +240,23 @@ body {
   opacity: 0.8;
 }
 
+.login-secondary-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.createAccount-button {
+  border: none;
+  background: none;
+  padding: 0;
+  text-align: right;
+  cursor: pointer;
+}
+
+.createAccount-button:hover {
+  opacity: 0.6;
+}
+
 .login-hint {
   margin: 1rem 0 0;
   color: #666666;

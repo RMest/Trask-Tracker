@@ -13,8 +13,9 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const goSignup = () => navigate("/signup");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
@@ -33,15 +34,30 @@ export default function Login() {
       return;
     }
 
-    // Demo login (no backend auth yet).
     try {
-      localStorage.setItem(AUTH_KEY, "true");
-      localStorage.setItem("userEmail", nameOrEmail.trim().toLowerCase());
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: nameOrEmail.trim().toLowerCase(),
+          password
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(typeof data.error === "string" ? data.error : "Login failed.");
+        return;
+      }
+      try {
+        localStorage.setItem(AUTH_KEY, "true");
+        localStorage.setItem("userEmail", data.email ?? nameOrEmail.trim().toLowerCase());
+      } catch {
+        // ignore
+      }
+      navigate("/");
     } catch {
-      // ignore
+      setError("Could not reach server. Is the API running on port 8080?");
     }
-
-    navigate("/");
   }
 
   return (
@@ -79,12 +95,15 @@ export default function Login() {
           {error ? <div className="login-error">{error}</div> : null}
 
           <div className="login-actions">
-            <button className="login-button" type="submit">
-              Log in
+            <button className="login-button" type="submit">Log in</button>
+          </div>
+          <div className="login-secondary-action">
+            <button className="createAccount-button" type="button" onClick={goSignup}>
+              Dont have an account? Create one
             </button>
           </div>
         </form>
-        <p className="login-hint">Demo-only login (stored in your browser).</p>
+        <p className="login-hint">Log in with an account you registered (stored in MongoDB).</p>
       </div>
     </div>
   );

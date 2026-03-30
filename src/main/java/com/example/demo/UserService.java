@@ -2,34 +2,77 @@ package com.example.demo;
 
 import java.time.Instant;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    private final AtomicLong idGenerator = new AtomicLong(1);
-    private final Map<String, User> usersByEmail = new ConcurrentHashMap<>();
+    private static final int MIN_PASSWORD_LENGTH = 8;
 
-    public User createUser(String name, String email) {
+    private final UserDocumentRepository userDocumentRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserDocumentRepository userDocumentRepository, PasswordEncoder passwordEncoder) {
+        this.userDocumentRepository = userDocumentRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public User register(String name, String email, String password) {
         String sanitizedName = sanitizeName(name);
         String normalizedEmail = normalizeEmail(email);
+        validatePassword(password);
 
-        if (usersByEmail.containsKey(normalizedEmail)) {
+        if (userDocumentRepository.existsByEmail(normalizedEmail)) {
             throw new IllegalArgumentException("A user with this email already exists.");
         }
 
-        User user = new User(
-                idGenerator.getAndIncrement(),
-                sanitizedName,
-                normalizedEmail,
-                Instant.now().toString());
+        UserDocument doc = new UserDocument();
+        doc.setName(sanitizedName);
+        doc.setEmail(normalizedEmail);
+        doc.setPasswordHash(passwordEncoder.encode(password));
+        doc.setCreatedAt(Instant.now().toString());
 
-        usersByEmail.put(normalizedEmail, user);
-        return user;
+        UserDocument saved = userDocumentRepository.save(doc);
+        return toUser(saved);
+    }
+
+    public User authenticate(String email, String password) {
+        String normalizedEmail = normalizeEmail(email);
+        validatePasswordPresent(password);
+
+        UserDocument doc = userDocumentRepository
+                .findByEmail(normalizedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+
+        String hash = doc.getPasswordHash();
+        if (hash == null || hash.isBlank()) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        if (!passwordEncoder.matches(password, hash)) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        return toUser(doc);
+    }
+
+    private static User toUser(UserDocument saved) {
+        return new User(saved.getId(), saved.getName(), saved.getEmail(), saved.getCreatedAt());
+    }
+
+    private void validatePassword(String password) {
+        validatePasswordPresent(password);
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters.");
+        }
+    }
+
+    private static void validatePasswordPresent(String password) {
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Password is required.");
+        }
     }
 
     private String sanitizeName(String name) {
@@ -50,6 +93,6 @@ public class UserService {
         return normalized;
     }
 
-    public record User(long id, String name, String email, String createdAt) {
+    public record User(String id, String name, String email, String createdAt) {
     }
 }
