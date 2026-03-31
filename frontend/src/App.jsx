@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import Login from "./Login.jsx";
 import Signup from "./Signup.jsx";
 
@@ -23,6 +24,8 @@ function ProtectedRoute({ children }) {
 
 function TaskBuilderPage() {
   const [selectedDate, setSelectedDate] = useState(null);
+  const [calendarView, setCalendarView] = useState("timeGridWeek");
+  const calendarRef = useRef(null);
 
   const sampleTasks = useMemo(
     () => [
@@ -39,21 +42,33 @@ function TaskBuilderPage() {
     setSelectedDate(info.dateStr);
   }
 
+  function handleViewChange(viewName) {
+    setCalendarView(viewName);
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.changeView(viewName);
+    }
+  }
+
   const navigate = useNavigate();
   function handleLogout() {
     try {
       localStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem("userEmail");
     } catch {
       // ignore
     }
-    navigate("/login");
+    navigate("/login", { replace: true });
+    window.location.assign("/login");
   }
 
   return (
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header-row">
-          <h1>Task Builder</h1>
+        <h1 className="app-header-title">
+          Task <span className="app-builder-word">Builder</span>
+        </h1>
           <button type="button" className="logout-button" onClick={handleLogout}>
             Log out
           </button>
@@ -61,30 +76,53 @@ function TaskBuilderPage() {
       </header>
 
       <main className="container">
-        <p className="subtitle">Visual calendar with sample tasks</p>
         <div className="layout">
           <section className="calendar-card">
-            <FullCalendar
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              fixedWeekCount={false}
-              height="auto"
-              events={sampleTasks}
-              dateClick={handleDateClick}
-              headerToolbar={{
-                left: "prev,next today",
-                center: "title",
-                right: ""
-              }}
-            />
+            <div className="calendar-view-controls">
+              <button
+                type="button"
+                className={`view-button ${calendarView === "timeGridDay" ? "is-active" : ""}`}
+                onClick={() => handleViewChange("timeGridDay")}
+              >
+                Day
+              </button>
+              <button
+                type="button"
+                className={`view-button ${calendarView === "timeGridWeek" ? "is-active" : ""}`}
+                onClick={() => handleViewChange("timeGridWeek")}
+              >
+                Week
+              </button>
+              <button
+                type="button"
+                className={`view-button ${calendarView === "dayGridMonth" ? "is-active" : ""}`}
+                onClick={() => handleViewChange("dayGridMonth")}
+              >
+                Month
+              </button>
+            </div>
+            <div className="calendar-scroll-area">
+              <div className="calendar-scroll-content">
+                <FullCalendar
+                  ref={calendarRef}
+                  plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                  initialView={calendarView}
+                  fixedWeekCount={false}
+                  height="auto"
+                  events={sampleTasks}
+                  dateClick={handleDateClick}
+                  headerToolbar={{
+                    left: "prev,next today",
+                    center: "title",
+                    right: ""
+                  }}
+                />
+              </div>
+            </div>
           </section>
           <aside className="task-card">
-            <h2>Sample Tasks</h2>
-            {selectedDate ? (
-              <p className="selected-date">Selected date: {selectedDate}</p>
-            ) : (
-              <p className="selected-date">Click a date on the calendar.</p>
-            )}
+            <h2>Todays Tasks</h2>
+            
             <ul className="task-list">
               {sampleTasks.map((task) => (
                 <li key={task.id}>

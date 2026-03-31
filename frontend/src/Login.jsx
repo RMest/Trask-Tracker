@@ -61,7 +61,7 @@ export default function Login() {
   }
 
   return (
-    <div className="login-shell">
+    <div className="login-shell login-page">
       <h1 className="login-title">
         Task <span className="builder-word">Builder</span>
       </h1>
