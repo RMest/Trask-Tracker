@@ -1,9 +1,13 @@
-com/example/demo/BlankCanvasApplication.class
 com/example/demo/AuthController$LoginRequest.class
 com/example/demo/UserService.class
 com/example/demo/UserService$User.class
 com/example/demo/AuthController.class
+com/example/demo/TaskController.class
 com/example/demo/UserDocument.class
 com/example/demo/AuthController$RegisterRequest.class
 com/example/demo/UserDocumentRepository.class
 com/example/demo/PasswordConfig.class
+com/example/demo/TaskDocumentRepository.class
+com/example/demo/BlankCanvasApplication.class
+com/example/demo/TaskController$TaskItem.class
+com/example/demo/TaskDocument.class

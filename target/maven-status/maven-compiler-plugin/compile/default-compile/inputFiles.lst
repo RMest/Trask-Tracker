@@ -1,6 +1,9 @@
 /Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/AuthController.java
 /Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/BlankCanvasApplication.java
 /Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/PasswordConfig.java
+/Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/TaskController.java
+/Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/TaskDocument.java
+/Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/TaskDocumentRepository.java
 /Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/UserDocument.java
 /Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/UserDocumentRepository.java
 /Users/rileymest/Documents/Cursor Projects/TaskManager/src/main/java/com/example/demo/UserService.java

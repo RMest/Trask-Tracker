@@ -55,15 +55,12 @@ textarea {
 }
 
 .app-header {
-  padding: 1.0rem 1.5rem;
+  padding: 1rem 1.5rem;
   text-align: left;
 }
 
 .app-header-row {
-  width: 100%;
-  margin: 0;
   display: flex;
-  flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
@@ -99,7 +96,7 @@ textarea {
 
 .container {
   width: min(1600px, 98vw);
-  margin: 2.5rem auto 0;
+  margin: 0.5rem auto 0;
 }
 
 .layout {
@@ -109,8 +106,23 @@ textarea {
   align-items: start;
 }
 
+.task-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.task-sidebar-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
 .calendar-card,
-.task-card {
+.overdue-task-card,
+.today-task-card,
+.completed-task-card {
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border-soft);
   border-radius: 0.75rem;
@@ -120,9 +132,32 @@ textarea {
 
 .calendar-view-controls {
   display: flex;
-  justify-content: flex-start;
   gap: 0.5rem;
+}
+
+.calendar-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 0.75rem;
+}
+
+.calendar-add-button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.calendar-add-button:hover {
+  border-color: var(--color-text-primary);
+  opacity: 0.85;
 }
 
 .calendar-scroll-area {
@@ -157,13 +192,30 @@ textarea {
   color: var(--color-bg-surface);
 }
 
-.task-card h2 {
+.overdue-task-card h2,
+.today-task-card h2,
+.completed-task-card h2 {
   margin: 0 0 0.75rem;
 }
 
-.selected-date {
-  margin: 0 0 0.75rem;
+.overdue-task-card {
+  padding: 0.75rem;
+  border-color: #e3c3c3;
+  background: #fff7f7;
+}
+
+.overdue-task-card h2 {
+  color: #8b1e1e;
+  font-size: 1rem;
+}
+
+.completed-task-list .task-title {
+  text-decoration: line-through;
   color: var(--color-text-secondary);
+}
+
+.completed-task-list .task-date {
+  color: var(--color-text-muted);
 }
 
 .task-list {
@@ -180,6 +232,42 @@ textarea {
   padding: 0.65rem 0.75rem;
   display: grid;
   gap: 0.2rem;
+}
+
+.task-list-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.complete-task-button {
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-bg-surface);
+  color: var(--color-text-muted);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.complete-task-button:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-bg-surface);
+}
+
+.complete-task-button.undo {
+  color: var(--color-primary-strong);
+}
+
+.complete-task-button.undo:hover {
+  background: var(--color-primary-strong);
+  border-color: var(--color-primary-strong);
+  color: var(--color-bg-surface);
 }
 
 .task-title {
@@ -205,6 +293,125 @@ textarea {
   font-size: 1.15rem;
 }
 
+.calendar-scroll-area .fc .fc-header-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  margin: 0;
+  padding: 0.5rem 0;
+  background: var(--color-bg-surface);
+}
+
+.calendar-scroll-area .fc .fc-scrollgrid-section-header > * {
+  position: sticky;
+  top: 3rem;
+  z-index: 5;
+  background: var(--color-bg-surface);
+}
+
+.fc .fc-event.fc-event-completed {
+  opacity: 0.5;
+}
+
+.task-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 999;
+}
+
+.task-modal {
+  width: min(460px, 94vw);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+.task-modal h3 {
+  margin: 0 0 0.75rem;
+}
+
+.task-modal-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.task-modal-form label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.task-modal-checkbox {
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+}
+
+.task-color-picker {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.task-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.task-color-option {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.task-color-option.is-active {
+  border-color: var(--color-text-primary);
+}
+
+.task-modal-form input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 0.45rem;
+}
+
+.task-modal-actions {
+  margin-top: 0.25rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.task-modal-actions.split {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-task-button {
+  border: 1px solid #cf3d3d;
+  background: #fff3f3;
+  color: #9b2020;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-task-button:hover {
+  background: #ffe3e3;
+  border-color: #b62f2f;
+}
+
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
@@ -225,7 +432,8 @@ textarea {
   font-family: "RigidDisplayRegular", Verdana, sans-serif;
 }
 
-.login-page #email::placeholder,
+.login-page .login-field input,
+.login-page .login-field input::placeholder,
 .login-page .login-button,
 .login-page .createAccount-button {
   font-family: Verdana, sans-serif;
